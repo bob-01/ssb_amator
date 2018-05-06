@@ -26,11 +26,14 @@ unsigned long currentTime,loopTime;
 unsigned long IF,Ftx,STEP;
 long Fcorr;
 
-boolean enc_block=false, enc_flag=false, lsb_usb_flag=false, rit_flag=false, Button_flag=false, tx_flag=false, step_flag=false, rewrite_flag=false, setup_flag=false;
+boolean enc_block=false, enc_flag=false, lsb_usb_flag=false,
+        rit_flag=false, Button_flag=false, tx_flag=false,
+        step_flag=false, rewrite_flag=false, setup_flag=false;
 
-uint8_t SWR_count=0, AVR_count=0, Enc_state, Enc_last, step_count=4, menu_count=0, 
-        setup_count=8, xF=1,
-        SI5351_DRIVE_CLK0, SI5351_DRIVE_CLK1, SI5351_DRIVE_CLK2, SI5351_CAPACITOR_LOAD; // 0 ..255
+uint8_t SWR_count=0, AVR_count=0,
+        Enc_state, Enc_last,
+        step_count=4, menu_count=0, setup_count=8, xF=1,
+        SI5351_DRIVE_CLK0, SI5351_DRIVE_CLK1, SI5351_DRIVE_CLK2; // 0 ..255
 int8_t enc_move=0, XTAL = 30;
 
 uint16_t Ftone,uFRD,uREV;
