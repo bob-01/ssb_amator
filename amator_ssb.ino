@@ -76,9 +76,42 @@ void loop(){
       {
             Check_enc();
             test();        
-            loopTime = currentTime; // Счетчик прошедшего времени      
+            loopTime = currentTime; // Счетчик прошедшего времени
+            SWR_count++;
       }
 //-------------------Конец проверка каждые 3 мс
+
+    if (tx_flag) {
+      if (SWR_count == 33) {
+        uFRD += analogRead(FRD);
+        uREV += analogRead(REV);
+        AVR_count++;
+        SWR_count = 0;
+      }
+
+      if (AVR_count == 10) {
+        uFRD = uFRD/10;
+        uREV = uREV/10;
+
+        lcd.setCursor(0,1);
+        lcd.print("P");
+        lcd.print("    ");
+        lcd.setCursor(1,1);
+        lcd.print(uFRD);
+        
+        lcd.setCursor(5,1);
+        lcd.print("F");
+        lcd.print("    ");
+        lcd.setCursor(6,1);
+        lcd.print(uREV);
+
+        lcd.setCursor(9,1);
+        lcd.print("SWR");
+        lcd.print( (float(uFRD+uREV)/(uFRD-uREV)) );
+        lcd.print("    ");
+        AVR_count == 0;
+      }
+    }//End s_meter
 
     if (step_flag){
           if(enc_flag || rewrite_flag){      
@@ -104,23 +137,23 @@ void loop(){
               enc_flag = false;
           }
     }//End Step flag
-    
-    if (setup_flag){
+
+    if (setup_flag) {
         F_setup();
     }
 }//End loop
 
-void test(){
+void test() {
 
              // Проверка кнопок
               if (Button_flag == 0)
               {
-                 if (digitalRead(Button_TX) == 0){
+                 if (digitalRead(Button_TX) == 0) {
                       Button_flag = true;
                       F_tx();
                  }//End Button_Tx
 
-                 if (digitalRead(Button_STEP) == 0){
+                 if (digitalRead(Button_STEP) == 0) {
                       Button_flag = true;
                       step_flag = !step_flag;
                       enc_block = !enc_block;
@@ -128,7 +161,7 @@ void test(){
                       
                  }//End Button_STEP
 
-                 if (digitalRead(Button_LSB_USB) == 0){
+                 if (digitalRead(Button_LSB_USB) == 0) {
                       Button_flag = true;
                       lsb_usb_flag = !lsb_usb_flag;
                       if (lsb_usb_flag) {
@@ -156,7 +189,6 @@ void test(){
                        menu_count = 0;
                        rit_flag && !setup_flag ? tone(tone_pin,Ftone) : noTone(tone_pin);
                  }//End Button_RIT
-
              }
 
              if (digitalRead(Button_TX) == 1 && digitalRead(Button_STEP) == 1 && digitalRead(Button_RIT) == 1 && digitalRead(Button_LSB_USB) == 1 && Button_flag == true)
@@ -196,36 +228,31 @@ void test(){
 }
 
 void F_print(){
-
   uint16_t mid;
-                //3.110.000.00
-                //9999.000.00
-                mid = Ftx/100000;    //3.110.
-                lcd.setCursor(0,0);
-                lcd.write(' ');
-                                
-                if ( (mid/1000) > 9)
-                {
-                    lcd.setCursor(0,0);
-                }
+  mid = Ftx/100000;
+  lcd.setCursor(0,0);
+  lcd.write(' ');
+                  
+  if ( (mid/1000) > 9) {
+    lcd.setCursor(0,0);
+  }
 
-                lcd.print(mid/1000);
-                lcd.write('.');
-                
-                mid = (mid%1000);
-                lcd.print(mid/100);
-                mid = (mid%100);
-                lcd.print(mid/10);
-                lcd.print( mid%10);
-                lcd.write('.');
-                
-                mid = (Ftx/100)%1000; //3.110. 123 .00 
+  lcd.print(mid/1000);
+  lcd.write('.');
+  
+  mid = (mid%1000);
+  lcd.print(mid/100);
+  mid = (mid%100);
+  lcd.print(mid/10);
+  lcd.print( mid%10);
+  lcd.write('.');
+  
+  mid = (Ftx/100)%1000;
 
-                lcd.print( mid/100);    //1 23
-                mid = mid%100;          //1 23
-                lcd.print( mid/10);
-                lcd.print( mid%10);
-
+  lcd.print( mid/100);
+  mid = mid%100;
+  lcd.print( mid/10);
+  lcd.print( mid%10);
 }//end f_print
 
 void Read_Value_EEPROM()
@@ -248,7 +275,7 @@ void Read_Value_EEPROM()
   34    ( 1 Byte) x*F
 */
       EEPROM.get(0, IF);     //Первая ПЧ
-      if (IF > 4000000000){
+      if (IF > 4000000000) {
         IF = 0;
         EEPROM.put(0, IF);
       }
