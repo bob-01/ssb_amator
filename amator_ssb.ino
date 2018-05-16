@@ -76,7 +76,7 @@ void loop(){
   }
 //-------------------Конец проверка каждые 3 мс
 
-  if ((SWR_count > 33) and tx_flag) {
+  if ((SWR_count > 16) and tx_flag) {
     SWR_count = 1;
     AVR_count++;  
     uFRD += analogRead(FRD);
