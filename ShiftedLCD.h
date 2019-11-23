@@ -47,9 +47,11 @@ public:
 
   LiquidCrystal(uint8_t data_pin, uint8_t clk_pin, uint8_t enable_pin);
 		
+  void init(uint8_t fourbitmode, uint8_t data_pin, uint8_t clk_pin, uint8_t enable_pin);
   void begin(uint8_t cols, uint8_t rows, uint8_t charsize = LCD_5x8DOTS);
 
   void clear();
+  void home();
 
   void noDisplay();
   void display();
@@ -57,12 +59,21 @@ public:
   void blink();
   void noCursor();
   void cursor();
+  void scrollDisplayLeft();
+  void scrollDisplayRight();
+  void leftToRight();
+  void rightToLeft();
+  void autoscroll();
+  void noAutoscroll();
 
+  void createChar(uint8_t, uint8_t[]);
   void setCursor(uint8_t, uint8_t); 
   virtual size_t write(uint8_t);
   void command(uint8_t);
 private:
   void send(uint8_t, uint8_t);
+  void write4bits(uint8_t);
+  void write8bits(uint8_t);
     
   uint8_t _displayfunction;
   uint8_t _displaycontrol;
@@ -78,4 +89,3 @@ private:
 };
 
 #endif
-

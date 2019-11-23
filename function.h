@@ -12,8 +12,6 @@
 #define Fmin           250000
 #define Fmax           4000000000
 
-#define M 1000000
-
 #define FRD            A0
 #define REV            A1
 
@@ -22,8 +20,8 @@ Si5351 si5351;
 // data_pin(rs)(orange), clk_pin (purpur) , enable_pin (red)
 LiquidCrystal lcd(4,5,6);
 
-unsigned long currentTime,loopTime;
-unsigned long IF,Ftx,STEP;
+unsigned long currentTime, loopTime;
+unsigned long IF, Ftx, STEP;
 long Fcorr = 0;
 
 boolean enc_block=false, enc_flag=false, lsb_usb_flag=false,
@@ -35,8 +33,9 @@ uint8_t SWR_count=0, AVR_count=0,
         step_count=4, menu_count=0, setup_count=8, xF=1,
         SI5351_DRIVE_CLK0, SI5351_DRIVE_CLK1, SI5351_DRIVE_CLK2; // 0 ..255
 int8_t enc_move=0, XTAL = 30;
+byte ENC_SPIN = 1;
 
-uint16_t Ftone,uFRD,uREV;
+uint16_t Ftone, uFRD, uREV;
 
 void F_eeprom_w() {
 
@@ -48,7 +47,7 @@ void F_eeprom_w() {
         EEPROM.put(0, IF);
       }
       
-						temp = XTAL;
+			temp = XTAL;
       EEPROM.get(4, XTAL);
       if (XTAL != temp) {
 								XTAL = temp;
@@ -71,7 +70,7 @@ void F_eeprom_w() {
         Ftone = temp;
         EEPROM.put(24, Ftone);
       }
-            
+
       temp = SI5351_DRIVE_CLK0;
       EEPROM.get(26, SI5351_DRIVE_CLK0); // Driver current
       if (SI5351_DRIVE_CLK0 != temp){
@@ -91,6 +90,13 @@ void F_eeprom_w() {
       if (SI5351_DRIVE_CLK2 != temp){
         SI5351_DRIVE_CLK2 = temp;
         EEPROM.put(28, SI5351_DRIVE_CLK2);
+      }
+
+      temp = ENC_SPIN;
+      EEPROM.get(29, ENC_SPIN);
+      if (ENC_SPIN != temp){
+        ENC_SPIN = temp;
+        EEPROM.put(29, ENC_SPIN);
       }
 
       temp = xF;
@@ -115,7 +121,7 @@ void Read_Value_EEPROM() {
   26    ( 1 Byte) SI5351_DRIVE_CLK0   2MA 4MA 6MA 8MA 
   27    ( 1 Byte) SI5351_DRIVE_CLK1
   28    ( 1 Byte) SI5351_DRIVE_CLK2
-  29    NULL
+  29    ( 1 Byte) ENC_SPIN
   30-33 NULL
   34    ( 1 Byte) x*F
 */
@@ -159,6 +165,13 @@ void Read_Value_EEPROM() {
         SI5351_DRIVE_CLK2 = 2;
         EEPROM.put(28, SI5351_DRIVE_CLK2);
       }
+
+      EEPROM.get(29, ENC_SPIN); // Driver current
+      if (ENC_SPIN > 1 || ENC_SPIN < -1){
+        ENC_SPIN = 1;
+        EEPROM.put(29, ENC_SPIN);
+      }
+            
       EEPROM.get(34, xF); //xF  = 1; multiplier F
       if (xF > 2){
         xF = 1;
