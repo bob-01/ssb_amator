@@ -6,6 +6,7 @@
 
 void setup() {
   Serial.begin(115200);
+  Serial.println("Hello World!");
   
   pinMode(pin_A, INPUT);
   pinMode(pin_B, INPUT);
@@ -17,16 +18,16 @@ void setup() {
   pinMode(tone_pin, OUTPUT); //объявляем пин как выход для звука
 
   digitalWrite(pin_A, HIGH);
-  digitalWrite(pin_B, HIGH); 
-  digitalWrite(Button_STEP, HIGH); 
-  digitalWrite(Button_LSB_USB, HIGH); 
-  digitalWrite(Button_TX, HIGH); 
+  digitalWrite(pin_B, HIGH);
+  digitalWrite(Button_STEP, HIGH);
+  digitalWrite(Button_LSB_USB, HIGH);
+  digitalWrite(Button_TX, HIGH);
   digitalWrite(Button_RIT, HIGH);
   digitalWrite(TX_out, LOW);
     
   Read_Value_EEPROM();
   
-  si5351.init(SI5351_CRYSTAL_LOAD_0PF, XTAL*1000000, Fcorr);
+  si5351.init(SI5351_CRYSTAL_LOAD_6PF, XTAL*1000000UL, Fcorr);
 
   switch (SI5351_DRIVE_CLK0){
     case  2: si5351.drive_strength(SI5351_CLK0, SI5351_DRIVE_2MA); break;
@@ -86,6 +87,8 @@ void loop(){
       uREV = uREV/AVR_count;
       SWR_Print();
       AVR_count = 1;
+      Serial.println("Hello World!");
+      //Serial.println(uFRD);
     }//End  if (count_avr > 3) 
   }//End s_meter
  
@@ -166,9 +169,8 @@ void test() {
       }//End Button_RIT
     }
 
-    if (digitalRead(Button_TX) == 1 && digitalRead(Button_STEP) == 1 && digitalRead(Button_RIT) == 1 && digitalRead(Button_LSB_USB) == 1 && Button_flag == true)
-    {
-            Button_flag = false;
+    if (digitalRead(Button_TX) == 1 && digitalRead(Button_STEP) == 1 && digitalRead(Button_RIT) == 1 && digitalRead(Button_LSB_USB) == 1 && Button_flag == true){
+      Button_flag = false;
     }
 
     if ( digitalRead(Button_RIT) == 0 && Button_flag == true && menu_count < 255 ){

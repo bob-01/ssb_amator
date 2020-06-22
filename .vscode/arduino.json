@@ -1,7 +1,6 @@
 {
-    "board": "arduino:avr:nano",
-    "configuration": "cpu=atmega328old",
-    "programmer": "USBasp",
-    "port": "COM3",
+    "board": "LGT:avr:lardu_328p",
+    "programmer": "AVRISP mkII",
+    "port": "COM2",
     "sketch": "amator_ssb.ino"
 }

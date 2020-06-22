@@ -9,8 +9,8 @@
 #define TX_out         11
 #define tone_pin       12
 
-#define Fmin           250000
-#define Fmax           4000000000
+#define Fmin           8000*100ULL
+#define Fmax           40000000*100ULL
 
 #define FRD            A0
 #define REV            A1
@@ -21,7 +21,7 @@ Si5351 si5351;
 LiquidCrystal lcd(4,5,6);
 
 unsigned long currentTime, loopTime;
-unsigned long IF, Ftx, STEP;
+uint32_t IF, Ftx, STEP;
 long Fcorr = 0;
 
 boolean enc_block=false, enc_flag=false, lsb_usb_flag=false,
@@ -34,7 +34,7 @@ uint8_t SI5351_DRIVE_CLK0, SI5351_DRIVE_CLK1, SI5351_DRIVE_CLK2; // 0 ..255
 
 int8_t enc_move = 0, ENC_SPIN = 1;
 
-uint16_t Ftone, uFRD, uREV;
+uint16_t Ftone, uFRD, uREV, IF_WIDTH;
 
 void F_eeprom_w() {
 
@@ -49,7 +49,7 @@ void F_eeprom_w() {
 			temp = XTAL;
       EEPROM.get(4, XTAL);
       if (XTAL != temp) {
-								XTAL = temp;
+				XTAL = temp;
         EEPROM.put(4, XTAL);
       }
       
@@ -111,7 +111,7 @@ void Read_Value_EEPROM() {
   EEPROM
   0-3   ( 4 Byte) IF
   4     ( 1 Byte) XTAL
-  5-7   NULL
+  5-7   IF_WIDTH
   8-11  NULL
   12-15 NULL
   16-19 ( 4 Byte) Fcorr
@@ -179,6 +179,25 @@ void Read_Value_EEPROM() {
   STEP = 1000;
 }// End Read EEPROM
 
+char * uintToStr( const uint64_t num){
+  char *str;
+  uint8_t i = 0;
+  uint64_t n = num;
+ 
+  do
+    i++;
+  while ( n /= 10 );
+ 
+  str[i] = '\0';
+  n = num;
+ 
+  do
+    str[--i] = ( n % 10 ) + '0';
+  while ( n /= 10 );
+
+  return str;
+}
+
 void SWR_Print() {
   lcd.setCursor(0,1);
   lcd.print("P");
@@ -203,4 +222,3 @@ void softReset(){
   asm volatile ("  jmp 0");
 
 }//End soft reset
-
