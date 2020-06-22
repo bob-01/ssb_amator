@@ -1,2 +1,4 @@
 *.workspace
 *.pdsbak
+.vscode/
+.vscode/arduino.json

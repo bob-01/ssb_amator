@@ -3,6 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\bob\\AppData\\Local\\Arduino15\\packages\\LGT8fx Boards\\hardware\\avr\\1.0.5\\**",
                 "C:\\Users\\bob\\Documents\\Arduino\\hardware\\LGT\\avr\\**",
                 "C:\\Program Files (x86)\\Arduino\\tools\\**",
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",

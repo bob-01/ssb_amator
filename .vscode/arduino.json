@@ -1,6 +1,7 @@
 {
-    "board": "LGT:avr:lardu_328p",
+    "board": "LGT8fx Boards:avr:328",
     "programmer": "AVRISP mkII",
     "port": "COM2",
-    "sketch": "amator_ssb.ino"
+    "sketch": "amator_ssb.ino",
+    "configuration": "clock_source=external,clock=16MHz,variant=modelP"
 }
